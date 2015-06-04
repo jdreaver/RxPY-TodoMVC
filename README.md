@@ -41,7 +41,6 @@ Funny how a todo app still has a todo list?
 - Finish TodoMVC spec. See the
   [spec here](https://github.com/tastejs/todomvc/blob/master/app-spec.md)
   - Add a combobox to filter by All, Active, and Completed
-  - Add a label that shows how many incomplete items: "X items left"
   - Add a "Clear Completed" button
   - Double click to edit a todo
   - Hide footer if no todos
@@ -52,4 +51,6 @@ Funny how a todo app still has a todo list?
 - Add tests
 - Make the app less imperative and more reactive. There is a lot of callback
   logic still.
+  - Better rx logic for uncompleted and completed streams, instead of using a
+    callback function to generate them.
 - Make everything look pretty. (Should we use QML and PyQt5?)

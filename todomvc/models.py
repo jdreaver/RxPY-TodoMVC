@@ -9,13 +9,24 @@ class TodoListModel:
 
     def __init__(self):
         self._todos = []  # List of strings
-        self.todo_stream = rx.subjects.Subject()
+        self.todo_stream = rx.subjects.BehaviorSubject(self._todos)
+        self.completed_stream = rx.subjects.BehaviorSubject([])
+        self.uncompleted_stream = rx.subjects.BehaviorSubject([])
 
     def _publish(self):
         self.todo_stream.on_next(self._todos)
+        self._publish_completed()
+
+    def _publish_completed(self, *args):
+        self.completed_stream.on_next(
+            [t for t in self._todos if t.completed])
+        self.uncompleted_stream.on_next(
+            [t for t in self._todos if not t.completed])
 
     def add_todo(self, text):
-        self._todos.append(TodoItem(text))
+        item = TodoItem(text)
+        item.completed_stream.subscribe(self._publish_completed)
+        self._todos.append(item)
         self._publish()
 
     def remove_todo(self, index):

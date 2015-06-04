@@ -4,12 +4,19 @@ from PyQt4 import QtGui
 class MainPresenter:
 
     def __init__(self, view, model):
+        self._item_presenters = []
+
         self.view = view
         self.view.textbox.returnPressed.connect(self._add_todo)
         self.model = model
         self.model.todo_stream.subscribe(self._update_view)
-
-        self._item_presenters = []
+        self.model.uncompleted_stream\
+            .map(lambda items: "{} item{} left".format(
+                len(items), "s" if len(items) > 1 else ""))\
+            .subscribe(self.view.count_label.setText)
+        self.model.todo_stream\
+            .map(lambda items: len(items) > 0)\
+            .subscribe(self.view.footer.setVisible)
 
     def _add_todo(self):
         text = self.view.textbox.text()
@@ -46,9 +53,21 @@ class MainView(QtGui.QWidget):
         # Holds individual widgets for each todo item
         self.todo_layout = QtGui.QVBoxLayout()
 
+        self.count_label = QtGui.QLabel()
+
+        footer_layout = QtGui.QHBoxLayout()
+        footer_layout.addWidget(self.count_label)
+        footer_layout.addStretch(1)
+
+        self.footer = QtGui.QWidget()
+        self.footer.setLayout(footer_layout)
+        self.footer.hide()
+
         layout = QtGui.QVBoxLayout()
         layout.addWidget(self.textbox)
         layout.addLayout(self.todo_layout)
+        layout.addWidget(self.footer)
+        layout.addStretch(1)
         self.setLayout(layout)
 
 
@@ -59,6 +78,8 @@ class TodoItemPresenter:
         self.model = model
         self.model.text_stream.subscribe(self.view.label.setText)
         self.model.completed_stream.subscribe(self.view.check.setChecked)
+
+        self.view.check.clicked.connect(self.model.completed_stream.on_next)
 
 
 class TodoItemView(QtGui.QWidget):
@@ -71,4 +92,5 @@ class TodoItemView(QtGui.QWidget):
         layout = QtGui.QHBoxLayout()
         layout.addWidget(self.check)
         layout.addWidget(self.label)
+        layout.addStretch(1)
         self.setLayout(layout)
