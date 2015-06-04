@@ -9,6 +9,8 @@ class MainPresenter:
         self.model = model
         self.model.todo_stream.subscribe(self._update_view)
 
+        self._item_presenters = []
+
     def _add_todo(self):
         text = self.view.textbox.text()
         if text:
@@ -20,11 +22,13 @@ class MainPresenter:
         for _ in range(self.view.todo_layout.count()):
             widget = self.view.todo_layout.takeAt(0).widget()
             del widget
+        self._item_presenters.clear()
 
         # Refresh todo widgets
         for todo in todos:
-            todo_item_view = TodoItemView(todo.text, todo.completed)
-            self.view.todo_layout.addWidget(todo_item_view)
+            presenter = TodoItemPresenter(todo)
+            self.view.todo_layout.addWidget(presenter.view)
+            self._item_presenters.append(presenter)
 
 
 class MainView(QtGui.QWidget):
@@ -48,13 +52,21 @@ class MainView(QtGui.QWidget):
         self.setLayout(layout)
 
 
+class TodoItemPresenter:
+
+    def __init__(self, model, view=None):
+        self.view = view or TodoItemView()
+        self.model = model
+        self.model.text_stream.subscribe(self.view.label.setText)
+        self.model.completed_stream.subscribe(self.view.check.setChecked)
+
+
 class TodoItemView(QtGui.QWidget):
 
-    def __init__(self, text, completed):
+    def __init__(self):
         super().__init__()
         self.check = QtGui.QCheckBox()
-        self.check.setChecked(completed)
-        self.label = QtGui.QLabel(text)
+        self.label = QtGui.QLabel()
 
         layout = QtGui.QHBoxLayout()
         layout.addWidget(self.check)

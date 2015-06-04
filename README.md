@@ -52,8 +52,4 @@ Funny how a todo app still has a todo list?
 - Add tests
 - Make the app less imperative and more reactive. There is a lot of callback
   logic still.
-  - Each TodoItemModel should have a stream for its `text` and `completed`
-    states.
-  - Only publish on the todo_stream if a todo item is added or deleted.
-    Otherwise, interact with the individual todo item models directly.
 - Make everything look pretty. (Should we use QML and PyQt5?)
