@@ -19,7 +19,7 @@ class MainPresenter:
             .subscribe(self.view.footer.setVisible)
 
     def _add_todo(self):
-        text = self.view.textbox.text()
+        text = self.view.textbox.text().strip()
         if text:
             self.view.textbox.clear()
             self.model.add_todo(text)

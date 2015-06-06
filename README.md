@@ -44,7 +44,6 @@ Funny how a todo app still has a todo list?
   - Add a "Clear Completed" button
   - Double click to edit a todo
   - Hide footer if no todos
-  - Trim space in todo item text
   - Have a textbox that marks all todos as complete
   - Add a delete button for todos. Only show it if the mouse is hovered over
     the todo item.
