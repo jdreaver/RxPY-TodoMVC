@@ -44,7 +44,7 @@ Funny how a todo app still has a todo list?
   - Add a "Clear Completed" button
   - Double click to edit a todo
   - Hide footer if no todos
-  - Have a textbox that marks all todos as complete
+  - Have a button that marks all todos as complete
 - Add tests
 - Make the app less imperative and more reactive. There is a lot of callback
   logic still.
