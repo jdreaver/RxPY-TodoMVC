@@ -29,6 +29,7 @@ class MainPresenter:
         # Clear layout
         for _ in range(self.view.todo_layout.count()):
             widget = self.view.todo_layout.takeAt(0).widget()
+            widget.setParent(None)
             del widget
         self._item_presenters.clear()
 
@@ -84,6 +85,7 @@ class TodoItemPresenter:
         self.view.is_hover_stream.subscribe(
             lambda is_hover: self.view.delete_button.setVisible(is_hover))
 
+        self.view.delete_button.pressed.connect(self.model.delete)
 
 
 class TodoItemView(QtGui.QWidget):

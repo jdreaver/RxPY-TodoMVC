@@ -45,8 +45,6 @@ Funny how a todo app still has a todo list?
   - Double click to edit a todo
   - Hide footer if no todos
   - Have a textbox that marks all todos as complete
-  - Add a delete button for todos. Only show it if the mouse is hovered over
-    the todo item.
 - Add tests
 - Make the app less imperative and more reactive. There is a lot of callback
   logic still.

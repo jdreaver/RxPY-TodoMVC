@@ -24,19 +24,21 @@ class TodoListModel:
             [t for t in self._todos if not t.completed])
 
     def add_todo(self, text):
-        item = TodoItem(text)
+        item = TodoItem(self, text)
         item.completed_stream.subscribe(self._publish_completed)
         self._todos.append(item)
         self._publish()
 
-    def remove_todo(self, index):
-        self._todos.pop(index)
+    def remove_todo(self, todo_item):
+        self._todos.remove(todo_item)
         self._publish()
 
 
 class TodoItem:
 
-    def __init__(self, text, completed=False):
+    def __init__(self, parent, text, completed=False):
+        self.parent = parent
+
         # A BehaviorSubject caches the latest emitted value, and this value is
         # immediately emitted when a new observer subscribes.
         self.text_stream = rx.subjects.BehaviorSubject(text)
@@ -57,6 +59,9 @@ class TodoItem:
     @completed.setter
     def completed(self, value):
         self.completed.on_next(value)
+
+    def delete(self):
+        self.parent.remove_todo(self)
 
     def __repr__(self):
         return "<TodoItem(text={}, completed={})>".format(
