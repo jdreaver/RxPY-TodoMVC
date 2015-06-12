@@ -1,4 +1,5 @@
 from PyQt4 import QtGui
+import rx
 
 
 class MainPresenter:
@@ -80,6 +81,9 @@ class TodoItemPresenter:
         self.model.completed_stream.subscribe(self.view.check.setChecked)
 
         self.view.check.clicked.connect(self.model.completed_stream.on_next)
+        self.view.is_hover_stream.subscribe(
+            lambda is_hover: self.view.delete_button.setVisible(is_hover))
+
 
 
 class TodoItemView(QtGui.QWidget):
@@ -88,9 +92,21 @@ class TodoItemView(QtGui.QWidget):
         super().__init__()
         self.check = QtGui.QCheckBox()
         self.label = QtGui.QLabel()
+        self.delete_button = QtGui.QPushButton(
+            QtGui.QIcon.fromTheme("edit-delete"), "Delete")
 
         layout = QtGui.QHBoxLayout()
         layout.addWidget(self.check)
         layout.addWidget(self.label)
         layout.addStretch(1)
+        layout.addWidget(self.delete_button)
         self.setLayout(layout)
+
+        self.setMouseTracking(True)
+        self.is_hover_stream = rx.subjects.BehaviorSubject(False)
+
+    def enterEvent(self, event):
+        self.is_hover_stream.on_next(True)
+
+    def leaveEvent(self, event):
+        self.is_hover_stream.on_next(False)
