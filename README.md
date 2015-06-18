@@ -33,6 +33,14 @@ out exactly how I should structure an MVP app with rx, and integrate with Qt.
 
 To run, simply execute `python run.py`.
 
+I recommend using [conda](http://conda.pydata.org/docs/) to install the
+dependencies. There is a pre-built binary package for PyQt4 in conda, and RxPY
+is a pure Python package so it can be installed with pip:
+
+```sh
+conda install pyqt pip
+pip install rx
+```
 
 # TODO
 
